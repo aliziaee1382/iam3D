@@ -41,16 +41,16 @@ export const Footer: React.FC<FooterProps> = ({
                 <a href="#home" className="hover:text-purple-300 transition-colors">صفحه اصلی</a>
               </li>
               <li>
-                <a href="#about" className="hover:text-purple-300 transition-colors">درباره من</a>
+                <a href="#services" className="hover:text-purple-300 transition-colors">خدمات و تخصص‌ها</a>
               </li>
               <li>
-                <a href="#services" className="hover:text-purple-300 transition-colors">خدمات و محاسبه‌گر قیمت</a>
+                <a href="#portfolio" className="hover:text-purple-300 transition-colors">شاهکارها و پروژه‌ها</a>
               </li>
               <li>
-                <a href="#portfolio" className="hover:text-purple-300 transition-colors">نمونه کارها</a>
+                <a href="#creations" className="hover:text-purple-300 transition-colors">محصولات و ربات‌ها</a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-purple-300 transition-colors">راه ارتباطی و سفارش</a>
+                <a href="#contact" className="hover:text-purple-300 transition-colors">شروع همکاری و مشاوره</a>
               </li>
             </ul>
           </div>

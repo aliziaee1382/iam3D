@@ -33,11 +33,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems: { id: PageSection; label: string }[] = [
     { id: 'home', label: 'صفحه اصلی' },
-    { id: 'about', label: 'درباره من' },
-    { id: 'services', label: 'خدمات' },
+    { id: 'services', label: 'خدمات و تخصص' },
+    { id: 'portfolio', label: 'شاهکارها' },
     { id: 'creations', label: 'ساخته‌هام' },
-    { id: 'portfolio', label: 'نمونه‌کارها' },
-    { id: 'contact', label: 'راه ارتباطی' },
+    { id: 'contact', label: 'شروع همکاری' },
   ];
 
   const scrollToSection = (id: PageSection) => {

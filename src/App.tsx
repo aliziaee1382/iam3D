@@ -15,17 +15,32 @@ import {
 } from './types';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { Sidebar } from './components/Sidebar';
-import { AboutSection } from './components/AboutSection';
-import { ServicesSection } from './components/ServicesSection';
-import { CreationsSection } from './components/CreationsSection';
+import { TechMarquee } from './components/TechMarquee';
+import { BentoServices } from './components/BentoServices';
 import { MasterpiecesSection } from './components/MasterpiecesSection';
-import { PortfolioSection } from './components/PortfolioSection';
+import { CreationsSection } from './components/CreationsSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
-import { ContactSection } from './components/ContactSection';
+import { FullPortfolioModal } from './components/FullPortfolioModal';
+import { QuickInquiryModal } from './components/QuickInquiryModal';
 import { Footer } from './components/Footer';
 import { AdminPanel } from './components/AdminPanel';
-import { ArrowUp, Send, Sparkles, Zap } from 'lucide-react';
+import {
+  ArrowUp,
+  Send,
+  Sparkles,
+  Zap,
+  Briefcase,
+  Phone,
+  Instagram,
+  MessageSquare,
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  ShieldCheck,
+  Flame,
+  Layers,
+  Heart
+} from 'lucide-react';
 import {
   PERSONAL_INFO,
   SERVICES_DATA,
@@ -34,15 +49,16 @@ import {
   MASTERPIECES_DATA,
   PROJECTS_DATA,
   TESTIMONIALS_DATA,
-  FAQ_DATA,
-  SKILLS_DATA
+  FAQ_DATA
 } from './data/portfolioData';
 
 export default function App() {
   const [theme, setTheme] = useState<ThemeMode>('dark');
   const [activeSection, setActiveSection] = useState<PageSection>('home');
-  const [prefilledService, setPrefilledService] = useState('');
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState(false);
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+  const [inquiryServiceTitle, setInquiryServiceTitle] = useState('طراحی سایت اختصاصی و وردپرس');
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   // Scroll Progress Tracking for Top Gradient Line
@@ -54,7 +70,7 @@ export default function App() {
   });
 
   // Auto-migrate outdated localStorage cache to new exported backup data
-  const CURRENT_DATA_VERSION = '2026-10-16_v2';
+  const CURRENT_DATA_VERSION = '2026-10-16_v3';
   if (typeof window !== 'undefined') {
     const savedVersion = localStorage.getItem('0003_data_version');
     if (savedVersion !== CURRENT_DATA_VERSION) {
@@ -75,8 +91,7 @@ export default function App() {
     const saved = localStorage.getItem('0003_personal_info');
     if (saved) {
       try {
-        const parsed: PersonalInfo = JSON.parse(saved);
-        return parsed;
+        return JSON.parse(saved);
       } catch {
         return PERSONAL_INFO;
       }
@@ -241,7 +256,7 @@ export default function App() {
         }
       }
     } catch (err) {
-      // Fallback silently to localStorage when running client-only dev server
+      // Fallback silently to localStorage
     }
     return false;
   };
@@ -297,11 +312,11 @@ export default function App() {
         return { success: false, message: 'پاسخ ناموفق از سرور cPanel' };
       }
     } catch (error) {
-      return { success: true, message: 'تغییرات به صورت کامل در حافظه مرورگر ذخیره شد (فایل api.php نیز در پوشه public جهت آپلود روی cPanel آماده است)' };
+      return { success: true, message: 'تغییرات به صورت کامل در حافظه مرورگر ذخیره شد' };
     }
   };
 
-  // Synchronize document dark/light class and browser top bar theme-color
+  // Synchronize document dark/light class and browser theme-color
   useEffect(() => {
     const root = document.documentElement;
     let metaThemeColor = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement;
@@ -314,7 +329,7 @@ export default function App() {
     if (theme === 'dark') {
       root.classList.add('dark');
       root.classList.remove('light');
-      metaThemeColor.content = '#0c0718';
+      metaThemeColor.content = '#06030c';
     } else {
       root.classList.add('light');
       root.classList.remove('dark');
@@ -335,15 +350,15 @@ export default function App() {
   };
 
   const handleOrderService = (serviceTitle: string) => {
-    setPrefilledService(serviceTitle);
-    scrollToSection('contact');
+    setInquiryServiceTitle(serviceTitle);
+    setIsInquiryModalOpen(true);
   };
 
   // Scroll Spy to track active section in navigation
   useEffect(() => {
-    const sectionIds: PageSection[] = ['home', 'about', 'services', 'creations', 'portfolio', 'contact'];
+    const sectionIds: PageSection[] = ['home', 'services', 'creations', 'portfolio', 'contact'];
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 260;
+      const scrollPosition = window.scrollY + 280;
       for (const sectionId of sectionIds) {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -375,22 +390,22 @@ export default function App() {
     setFaqs(FAQ_DATA);
   };
 
+  const isDark = theme === 'dark';
+
   return (
     <div
       className={`min-h-screen transition-colors duration-300 relative overflow-x-clip ${
-        theme === 'dark'
-          ? 'bg-[#0a0612] text-slate-100'
-          : 'bg-[#f4effa] text-slate-900'
+        isDark ? 'bg-[#06030c] text-slate-100' : 'bg-[#f8f5fc] text-slate-900'
       }`}
       dir="rtl"
     >
       {/* Scroll-Driven Top Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-indigo-500 origin-right z-[60] shadow-[0_0_14px_rgba(168,85,247,0.85)]"
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-indigo-500 origin-right z-[60] shadow-[0_0_16px_rgba(168,85,247,0.9)]"
         style={{ scaleX }}
       />
 
-      {/* Modern Sticky Glass Navbar */}
+      {/* Sticky Glass Navbar */}
       <Navbar
         theme={theme}
         toggleTheme={toggleTheme}
@@ -399,172 +414,255 @@ export default function App() {
         onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
-      {/* Ambient Parallax Glowing Backgrounds */}
-      <div className="fixed top-0 right-1/4 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-subtle" />
-      <div className="fixed bottom-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      {/* Parallax Radial Glow Blooms in Background */}
+      <div className="fixed top-0 right-1/4 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse-subtle" />
+      <div className="fixed top-1/2 left-1/4 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[150px] pointer-events-none -z-10" />
+      <div className="fixed bottom-0 right-1/3 w-[550px] h-[550px] bg-fuchsia-600/8 rounded-full blur-[160px] pointer-events-none -z-10" />
 
-      {/* SECTION 1: HERO */}
+      {/* ======================================================== */}
+      {/* SCENE 1: CINEMATIC HERO */}
+      {/* ======================================================== */}
       <Hero
         theme={theme}
         personalInfo={personalInfo}
         onExplorePortfolio={() => scrollToSection('portfolio')}
-        onContactClick={() => scrollToSection('contact')}
+        onContactClick={() => {
+          setInquiryServiceTitle('طراحی سایت اختصاصی و وردپرس');
+          setIsInquiryModalOpen(true);
+        }}
       />
 
-      {/* SECTION 2: ABOUT & PROFILE */}
-      <section id="about" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      {/* ======================================================== */}
+      {/* SCENE 2: INFINITE KINETIC TECH MARQUEE */}
+      {/* ======================================================== */}
+      <TechMarquee />
+
+      {/* ======================================================== */}
+      {/* SCENE 3: BENTO GRID 4 PILLARS (SERVICES) */}
+      {/* ======================================================== */}
+      <section id="services" className="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <BentoServices
+          theme={theme}
+          services={services}
+          onOrderService={handleOrderService}
+        />
+      </section>
+
+      {/* ======================================================== */}
+      {/* SCENE 4: FEATURED MASTERPIECES */}
+      {/* ======================================================== */}
+      <section id="portfolio" className="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-purple-500/10 space-y-12">
+        <MasterpiecesSection
+          theme={theme}
+          masterpieces={masterpieces}
+          onOrderService={handleOrderService}
+        />
+
+        {/* View All Projects Trigger Banner */}
         <motion.div
-          initial={{ opacity: 0, y: 35 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col lg:flex-row items-start gap-8"
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.5 }}
+          className={`p-6 sm:p-8 rounded-3xl border flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-right relative overflow-hidden ${
+            isDark
+              ? 'bg-gradient-to-r from-purple-950/40 via-slate-900/80 to-indigo-950/40 border-purple-500/30 shadow-2xl'
+              : 'bg-white border-purple-200 shadow-xl'
+          }`}
         >
-          {/* Profile Sidebar Card */}
-          <div className="w-full lg:w-80 flex-shrink-0">
-            <Sidebar theme={theme} personalInfo={personalInfo} />
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 flex-shrink-0 shadow-inner">
+              <Briefcase className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className={`text-xl sm:text-2xl font-black mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                مشاهده آرشیو کامل نمونه‌کارها ({projects.length} پروژه)
+              </h3>
+              <p className={`text-xs sm:text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                شامل وبسایت‌های بانکی، فروشگاه ابزار، کاتالوگ الدورادو، ایمان‌تک، اسباب‌بازی دنیای کودک، رزرو پزشکی و...
+              </p>
+            </div>
           </div>
 
-          {/* Main About Details & Core Principles */}
-          <div className="flex-1 w-full min-w-0 space-y-12">
-            <AboutSection
-              theme={theme}
-              onOrderService={handleOrderService}
-              personalInfo={personalInfo}
-              services={services}
-            />
+          <button
+            onClick={() => setIsPortfolioModalOpen(true)}
+            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm shadow-xl shadow-purple-600/35 transition-all hover:scale-105 active:scale-95 whitespace-nowrap"
+          >
+            <span>ورود به گالری نمونه‌کارها</span>
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+        </motion.div>
+      </section>
 
-            {/* Scroll-Triggered Animated Technical Skills */}
-            <motion.div
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5 }}
-              className={`p-6 sm:p-8 rounded-3xl border transition-all ${
-                theme === 'dark'
-                  ? 'bg-slate-900/60 border-purple-500/20 shadow-xl'
-                  : 'bg-white border-slate-200 shadow-sm'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <span className="w-2.5 h-6 bg-purple-500 rounded-full inline-block" />
-                <h3 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
-                  سطح تخصص و مهارت‌های فنی
-                </h3>
-              </div>
+      {/* ======================================================== */}
+      {/* SCENE 5: CREATIONS (BOTS & APPS) */}
+      {/* ======================================================== */}
+      <section id="creations" className="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-purple-500/10">
+        <CreationsSection
+          theme={theme}
+          botServices={botServices}
+          apps={apps}
+          onOrderService={handleOrderService}
+        />
+      </section>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {SKILLS_DATA.map((skill, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between text-xs sm:text-sm font-bold">
-                      <span className={theme === 'dark' ? 'text-slate-200' : 'text-slate-800'}>
-                        {skill.name}
-                      </span>
-                      <span className="text-purple-400 font-english font-mono">{skill.level}٪</span>
-                    </div>
-                    <div className="h-2.5 w-full bg-slate-950/40 rounded-full overflow-hidden border border-purple-500/20">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1.2, delay: index * 0.1, ease: 'easeOut' }}
-                        className="h-full bg-gradient-to-r from-purple-600 via-fuchsia-500 to-indigo-500 rounded-full"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+      {/* ======================================================== */}
+      {/* SCENE 6: IMPACT NUMBERS & LIVE STATS */}
+      {/* ======================================================== */}
+      <section className="py-16 md:py-24 border-t border-purple-500/10 bg-slate-950/40 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              {
+                number: personalInfo.experienceYears,
+                label: 'سابقه کار تخصصی و حرفه‌ای',
+                desc: 'در توسعه وب، اندروید و ربات',
+                icon: <Clock className="w-5 h-5 text-indigo-400" />
+              },
+              {
+                number: personalInfo.completedProjects,
+                label: 'پروژه و محصول دیجیتال موفق',
+                desc: 'تحویل داده شده با رضایت کامل',
+                icon: <Flame className="w-5 h-5 text-amber-400" />
+              },
+              {
+                number: personalInfo.satisfactionRate,
+                label: 'رضایت مشتریان و کارفرمایان',
+                desc: 'کیفیت تضمینی و پشتیبانی واقعی',
+                icon: <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              },
+              {
+                number: '< ۰.۸s',
+                label: 'میانگین سرعت لود وبسایت‌ها',
+                desc: 'گواهی Grade A از GTmetrix',
+                icon: <Zap className="w-5 h-5 text-fuchsia-400" />
+              },
+            ].map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className={`p-6 rounded-3xl border flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 ${
+                  isDark
+                    ? 'bg-slate-900/60 border-purple-500/20 shadow-xl hover:border-purple-500/40'
+                    : 'bg-white border-slate-200 shadow-md'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className="p-2.5 rounded-xl bg-purple-600/10 border border-purple-500/20">
+                    {stat.icon}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-3xl sm:text-4xl font-black font-english text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-300 block mb-2">
+                    {stat.number}
+                  </span>
+                  <h4 className={`text-sm sm:text-base font-bold mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                    {stat.label}
+                  </h4>
+                  <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                    {stat.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* SECTION 3: SERVICES */}
-      <section id="services" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-purple-500/10">
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-        >
-          <ServicesSection
-            theme={theme}
-            services={services}
-            onOrderService={handleOrderService}
-          />
-        </motion.div>
+      {/* ======================================================== */}
+      {/* SCENE 7: TESTIMONIALS */}
+      {/* ======================================================== */}
+      <section className="border-t border-purple-500/10">
+        <TestimonialsSection testimonials={testimonials} />
       </section>
 
-      {/* SECTION 4: CREATIONS (BOTS & APPS) */}
-      <section id="creations" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-purple-500/10">
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-        >
-          <CreationsSection
-            theme={theme}
-            botServices={botServices}
-            apps={apps}
-            onOrderService={handleOrderService}
-          />
-        </motion.div>
-      </section>
-
-      {/* SECTION 5: MASTERPIECES & PORTFOLIO GALLERY */}
-      <section id="portfolio" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-purple-500/10 space-y-16">
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-        >
-          <MasterpiecesSection
-            theme={theme}
-            masterpieces={masterpieces}
-            onOrderService={handleOrderService}
-          />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-        >
-          <PortfolioSection
-            theme={theme}
-            projects={projects}
-          />
-        </motion.div>
-      </section>
-
-      {/* SECTION 6: TESTIMONIALS */}
-      <section id="testimonials" className="border-t border-purple-500/10">
+      {/* ======================================================== */}
+      {/* SCENE 8: FINAL CONVERSION PORTAL (CTA) */}
+      {/* ======================================================== */}
+      <section id="contact" className="py-20 md:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-purple-500/10">
         <motion.div
           initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
+          className={`rounded-3xl p-8 sm:p-14 border relative overflow-hidden text-center max-w-4xl mx-auto ${
+            isDark
+              ? 'bg-gradient-to-b from-purple-950/40 via-slate-900/90 to-slate-950 border-purple-500/30 shadow-2xl purple-glow'
+              : 'bg-white border-purple-200 shadow-xl'
+          }`}
         >
-          <TestimonialsSection testimonials={testimonials} />
-        </motion.div>
-      </section>
+          {/* Background Ambient Radial */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* SECTION 7: CONTACT & ORDER FORM */}
-      <section id="contact" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-purple-500/10">
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.6 }}
-        >
-          <ContactSection
-            theme={theme}
-            initialServiceTitle={prefilledService}
-            onAddOrderMessage={handleAddOrderMessage}
-          />
+          <div className="relative z-10 space-y-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>شروع همکاری مستقیم با برند 0003</span>
+            </div>
+
+            <h2 className={`text-3xl sm:text-5xl font-black tracking-tight leading-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              آماده‌اید ایده‌تان را به یک
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-300 to-indigo-300">
+                محصول دیجیتال استثنایی
+              </span>{' '}
+              تبدیل کنیم؟
+            </h2>
+
+            <p className={`text-sm sm:text-base leading-relaxed max-w-xl mx-auto ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+              از طراحی وبسایت‌های اختصاصی و وردپرس تا اپلیکیشن اندروید، ربات‌های تلگرام و دیزاین گرافیک؛ همراه شما هستم.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+              <a
+                href={personalInfo.telegramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto flex-1 flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm sm:text-base shadow-xl shadow-purple-600/40 transition-all hover:scale-105 active:scale-95"
+              >
+                <Send className="w-5 h-5 rotate-[-20deg]" />
+                <span>پیام مستقیم در تلگرام</span>
+              </a>
+
+              <button
+                onClick={() => {
+                  setInquiryServiceTitle('طراحی سایت اختصاصی و وردپرس');
+                  setIsInquiryModalOpen(true);
+                }}
+                className={`w-full sm:w-auto flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-sm sm:text-base border transition-all hover:scale-105 active:scale-95 ${
+                  isDark
+                    ? 'bg-slate-900/90 border-purple-500/40 text-purple-200 hover:bg-slate-800'
+                    : 'bg-slate-100 border-purple-200 text-purple-900 hover:bg-white'
+                }`}
+              >
+                <MessageSquare className="w-5 h-5 text-purple-400" />
+                <span>ارسال فرم مشاوره</span>
+              </button>
+            </div>
+
+            {/* Quick Contact Badges */}
+            <div className="pt-8 border-t border-purple-500/20 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
+              <a href={`tel:${personalInfo.phone}`} className="flex items-center gap-2 hover:text-purple-300 transition-colors">
+                <Phone className="w-4 h-4 text-emerald-400" />
+                <span className="font-english font-bold">{personalInfo.phone}</span>
+              </a>
+              <span>•</span>
+              <a href={personalInfo.telegramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-purple-300 transition-colors">
+                <Send className="w-4 h-4 text-sky-400 rotate-[-20deg]" />
+                <span className="font-english font-bold">@{personalInfo.telegram}</span>
+              </a>
+              <span>•</span>
+              <a href={personalInfo.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-purple-300 transition-colors">
+                <Instagram className="w-4 h-4 text-rose-400" />
+                <span className="font-english font-bold">@{personalInfo.instagram}</span>
+              </a>
+            </div>
+
+          </div>
         </motion.div>
       </section>
 
@@ -591,7 +689,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Floating Direct Telegram Pill */}
+      {/* Floating Telegram Pill */}
       <motion.a
         href={personalInfo.telegramUrl}
         target="_blank"
@@ -603,6 +701,24 @@ export default function App() {
         <Send className="w-4 h-4 text-purple-400 rotate-[-20deg]" />
         <span className="text-xs font-bold font-english">@{personalInfo.telegram}</span>
       </motion.a>
+
+      {/* Full Portfolio Archive Modal */}
+      <FullPortfolioModal
+        isOpen={isPortfolioModalOpen}
+        onClose={() => setIsPortfolioModalOpen(false)}
+        theme={theme}
+        projects={projects}
+      />
+
+      {/* Quick Inquiry / Order Modal */}
+      <QuickInquiryModal
+        isOpen={isInquiryModalOpen}
+        onClose={() => setIsInquiryModalOpen(false)}
+        initialServiceTitle={inquiryServiceTitle}
+        onAddOrderMessage={handleAddOrderMessage}
+        personalInfo={personalInfo}
+        theme={theme}
+      />
 
       {/* Admin Panel Modal */}
       <AdminPanel
