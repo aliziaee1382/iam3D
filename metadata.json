@@ -1,0 +1,6 @@
+{
+  "name": "0003 - علی ضیائی | طراح وب و ربات تلگرام",
+  "description": "سایت شخصی و پورتفولیو علی ضیائی (0003) - طراحی سایت اختصاصی و وردپرس، توسعه اپلیکیشن موبایل با کتلین و جاوا، ربات تلگرام و طراحی بنر و لوگو",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
