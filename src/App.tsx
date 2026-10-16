@@ -22,6 +22,7 @@ import { CreationsSection } from './components/CreationsSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { FullPortfolioModal } from './components/FullPortfolioModal';
 import { QuickInquiryModal } from './components/QuickInquiryModal';
+import { LuxuryCursor } from './components/LuxuryCursor';
 import { Footer } from './components/Footer';
 import { AdminPanel } from './components/AdminPanel';
 import {
@@ -399,6 +400,9 @@ export default function App() {
       }`}
       dir="rtl"
     >
+      {/* Luxury Ambient Cursor Spotlight */}
+      <LuxuryCursor />
+
       {/* Scroll-Driven Top Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-indigo-500 origin-right z-[60] shadow-[0_0_16px_rgba(168,85,247,0.9)]"
@@ -436,6 +440,78 @@ export default function App() {
       {/* SCENE 2: INFINITE KINETIC TECH MARQUEE */}
       {/* ======================================================== */}
       <TechMarquee />
+
+      {/* ======================================================== */}
+      {/* SCENE 2.5: PHILOSOPHY & MANIFESTO STATEMENT */}
+      {/* ======================================================== */}
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-6"
+          >
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-400 text-xs font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>فلسفه طراحی و مهندسی 0003</span>
+            </div>
+
+            <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>
+              «پروژه‌ای که ساخته می‌شود باید هم در{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-fuchsia-300 to-indigo-300">
+                زیبایی بصری
+              </span>{' '}
+              و هم در{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-400">
+                سرعت و کارایی
+              </span>
+              ، استانداردی نو تعریف کند.»
+            </h2>
+
+            <p className={`text-sm sm:text-base leading-relaxed max-w-3xl mx-auto ${
+              isDark ? 'text-slate-300' : 'text-slate-600'
+            }`}>
+              در عصر انبوه قالب‌های کپی و کدهای سنگین، من معتقدم ارزش واقعی در معماری اختصاصی، طراحی مینیمال و لوکس، و اجرای بدون نقص معنا پیدا می‌کند. با من به‌طور مستقیم در ارتباط هستید؛ بدون واسطه و با تضمین بالاترین استاندارد کیفیتی.
+            </p>
+
+            <div className="pt-8 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 text-right">
+              <div className={`p-5 rounded-2xl border transition-all ${
+                isDark ? 'bg-slate-900/60 border-purple-500/20' : 'bg-white border-slate-200 shadow-sm'
+              }`}>
+                <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-3">
+                  <Zap className="w-4 h-4 text-amber-400" />
+                </div>
+                <h4 className="font-bold text-sm text-purple-200 mb-1">سرعت لود زیر ۱ ثانیه</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">بهینه‌سازی حداکثری کدها، کشینگ مدرن و سازگاری کامل با استانداردهای گوگل Core Web Vitals.</p>
+              </div>
+
+              <div className={`p-5 rounded-2xl border transition-all ${
+                isDark ? 'bg-slate-900/60 border-purple-500/20' : 'bg-white border-slate-200 shadow-sm'
+              }`}>
+                <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-3">
+                  <Layers className="w-4 h-4 text-purple-400" />
+                </div>
+                <h4 className="font-bold text-sm text-purple-200 mb-1">طراحی اختصاصی و سفارشی</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">دیزاین سیستم مدرن منطبق با هویت برند شما و دور از قالب‌های آماده تکراری بازار.</p>
+              </div>
+
+              <div className={`p-5 rounded-2xl border transition-all ${
+                isDark ? 'bg-slate-900/60 border-purple-500/20' : 'bg-white border-slate-200 shadow-sm'
+              }`}>
+                <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-3">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                </div>
+                <h4 className="font-bold text-sm text-purple-200 mb-1">پشتیبانی و امنیت کامل</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">کدنویسی تمیز، مقاوم در برابر نفوذ و همراهی مداوم برای ارتقای مستمر پروژه.</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* ======================================================== */}
       {/* SCENE 3: BENTO GRID 4 PILLARS (SERVICES) */}
